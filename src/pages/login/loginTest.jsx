@@ -1,20 +1,16 @@
-/* eslint-disable no-unused-vars */
 import { useRef, useState } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import axios from 'axios';
 import Button from '../../components/Button'; // Import the Button component
 
 export const Login = () => {
 	const canvasRef = useRef(null);
 	const [brushRadius, setBrushRadius] = useState(4);
 	const [backgroundImage, setBackgroundImage] = useState(null);
-	const [maskedImage, setMaskedImage] = useState(null);
-	const [isLoading, setIsLoading] = useState(false); // State for loading indicator
-	const [uploadedImageUrls, setUploadedImageUrls] = useState(null); // State for uploaded image URLs
+	const [maskedImage, setMaskedImage] = useState(null); // State for the masked image
 
-	// Handle image upload for background
+	// Handle image upload
 	const handleImageUpload = (e) => {
 		const file = e.target.files[0];
 		if (file && file.type.startsWith('image/')) {
@@ -34,7 +30,6 @@ export const Login = () => {
 
 	// Save drawing as image
 	const saveAsImage = () => {
-		if (isLoading) return;
 		if (canvasRef.current) {
 			const canvas = document.createElement('canvas');
 
@@ -51,65 +46,9 @@ export const Login = () => {
 			// Get the data URL of the resulting image
 			const dataURL = canvas.toDataURL();
 			setMaskedImage(dataURL);
-			uploadImage(backgroundImage, dataURL);
 		}
 	};
 
-	// Convert base64 to Blob
-	const base64ToBlob = (base64Data, mimeType) => {
-		const byteCharacters = atob(base64Data);
-		const byteArrays = [];
-
-		for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-			const slice = byteCharacters.slice(offset, offset + 1024);
-			const byteNumbers = new Array(slice.length);
-			for (let i = 0; i < slice.length; i++) {
-				byteNumbers[i] = slice.charCodeAt(i);
-			}
-			const byteArray = new Uint8Array(byteNumbers);
-			byteArrays.push(byteArray);
-		}
-
-		return new Blob(byteArrays, { type: mimeType });
-	};
-
-	// Reusable API call to upload both background and mask images
-	const uploadImage = async (image, mask) => {
-		setIsLoading(true); // Start loading
-
-		try {
-			const formData = new FormData();
-
-			// Convert base64 to blob
-			if (image.split(',')[1] && mask.split(',')[1]) {
-				const imageBlob = base64ToBlob(image.split(',')[1], 'image/jpeg');
-				const maskBlob = base64ToBlob(mask.split(',')[1], 'image/png');
-
-				// Append the files with appropriate keys
-				formData.append('image', imageBlob, 'background.jpg');
-				formData.append('mask', maskBlob, 'masked.png');
-
-				// Replace the URL with your FastAPI endpoint
-				const response = await axios.post('http://localhost:8000/upload/', formData, {
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					},
-				});
-
-				// Handle the successful response
-				setUploadedImageUrls((prevUrls) => ({
-					...prevUrls,
-					backgroundImage: response.data.image_data.s3_url,
-					maskedImage: response.data.mask_data.s3_url,
-				}));
-			}
-
-			setIsLoading(false); // Stop loading
-		} catch (error) {
-			console.error('Error uploading images:', error);
-			setIsLoading(false); // Stop loading on error
-		}
-	};
 	// Clear the canvas
 	const clearCanvas = () => {
 		if (canvasRef.current) {
@@ -168,11 +107,8 @@ export const Login = () => {
 				Clear Drawing
 			</Button>
 
-			{/* Show loader while uploading */}
-			{isLoading && <div>Uploading...</div>}
-
 			{/* Display Original and Masked Image Side by Side */}
-			{uploadedImageUrls && !isLoading && maskedImage && (
+			{maskedImage && (
 				<div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
 					<div style={{ textAlign: 'center', marginRight: '20px' }}>
 						<h4>Uploaded Image</h4>
@@ -180,10 +116,7 @@ export const Login = () => {
 							src={backgroundImage}
 							alt="Uploaded"
 							style={{
-								width: '300px',
-								height: '300px',
-								border: '1px solid #ccc',
-								objectFit: 'cover',
+								width: '300px', height: '300px', border: '1px solid #ccc', objectFit: 'cover'
 							}}
 						/>
 					</div>
@@ -192,11 +125,7 @@ export const Login = () => {
 						<img
 							src={maskedImage}
 							alt="Masked"
-							style={{
-								width: '300px',
-								height: '300px',
-								border: '1px solid #ccc',
-							}}
+							style={{ width: '300px', height: '300px', border: '1px solid #ccc' }}
 						/>
 					</div>
 				</div>
