@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useRef, useState } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import Slider from 'rc-slider';
@@ -28,7 +27,7 @@ export const Login = () => {
 				canvasRef.current.clear();
 			}
 		} else {
-			alert('Please upload a valid image file.');
+			console.log('Please upload a valid image file.');
 		}
 	};
 
