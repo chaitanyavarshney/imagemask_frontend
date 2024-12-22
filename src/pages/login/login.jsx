@@ -3,15 +3,15 @@ import CanvasDraw from 'react-canvas-draw';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import axios from 'axios';
-import Button from '../../components/Button'; // Import the Button component
+import Button from '../../components/Button';
 
 export const Login = () => {
 	const canvasRef = useRef(null);
 	const [brushRadius, setBrushRadius] = useState(4);
 	const [backgroundImage, setBackgroundImage] = useState(null);
 	const [maskedImage, setMaskedImage] = useState(null);
-	const [isLoading, setIsLoading] = useState(false); // State for loading indicator
-	const [uploadedImageUrls, setUploadedImageUrls] = useState(null); // State for uploaded image URLs
+	const [isLoading, setIsLoading] = useState(false);
+	const [uploadedImageUrls, setUploadedImageUrls] = useState(null);
 
 	// Handle image upload for background
 	const handleImageUpload = (e) => {
@@ -43,7 +43,6 @@ export const Login = () => {
 			ctx.fillStyle = 'black';
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-			// Draw the masked image onto the black background
 			const maskedCanvas = canvasRef.current.canvas.drawing;
 			ctx.drawImage(maskedCanvas, 0, 0, canvas.width, canvas.height);
 
@@ -176,7 +175,7 @@ export const Login = () => {
 					<div style={{ textAlign: 'center', marginRight: '20px' }}>
 						<h4>Uploaded Image</h4>
 						<img
-							src={uploadedImageUrls.backgroundImage}
+							src={backgroundImage}
 							alt="Uploaded"
 							style={{
 								width: '300px',
@@ -189,7 +188,7 @@ export const Login = () => {
 					<div style={{ textAlign: 'center' }}>
 						<h4>Masked Image</h4>
 						<img
-							src={uploadedImageUrls.maskedImage}
+							src={maskedImage}
 							alt="Masked"
 							style={{
 								width: '300px',
