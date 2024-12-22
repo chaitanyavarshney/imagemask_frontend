@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useRef, useState } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import Slider from 'rc-slider';
@@ -170,7 +171,7 @@ export const Login = () => {
 			{isLoading && <div>Uploading...</div>}
 
 			{/* Display Original and Masked Image Side by Side */}
-			{uploadedImageUrls && !isLoading && maskedImage && (
+			{!isLoading && maskedImage && (
 				<div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
 					<div style={{ textAlign: 'center', marginRight: '20px' }}>
 						<h4>Uploaded Image</h4>
