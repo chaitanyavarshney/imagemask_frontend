@@ -177,7 +177,7 @@ export const Login = () => {
 					<div style={{ textAlign: 'center', marginRight: '20px' }}>
 						<h4>Uploaded Image</h4>
 						<img
-							src={backgroundImage}
+							src={uploadedImageUrls.backgroundImage}
 							alt="Uploaded"
 							style={{
 								width: '300px',
@@ -190,7 +190,7 @@ export const Login = () => {
 					<div style={{ textAlign: 'center' }}>
 						<h4>Masked Image</h4>
 						<img
-							src={maskedImage}
+							src={uploadedImageUrls.maskedImage}
 							alt="Masked"
 							style={{
 								width: '300px',
